@@ -184,7 +184,6 @@
             document.getElementById('btn-cancelar').style.display = 'none';
         }
 
-        // Lógica simple para filtrar grados por nivel
         document.getElementById('codNivel').addEventListener('change', function() {
             var nivelSeleccionado = this.value;
             var grados = document.getElementById('codGrado').options;
