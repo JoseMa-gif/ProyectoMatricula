@@ -246,3 +246,40 @@ public class MatriculaDAO {
         return null;
     }
 
+    public Matricula buscarPorAlumnoYAnio(int codAlumno, int codAnioAcademico) throws SQLException {
+        String sql = "SELECT m.codMatricula, m.codAlumno, m.codAula, m.codAnioAcademico, m.fechaMatricula, m.version, m.estado, "
+                   + "CONCAT(al.apellidoPaterno, ' ', al.apellidoMaterno, ', ', al.nombres) as nombreAlumno, "
+                   + "CONCAT(n.nombre, ' ', g.nombre, ' \"', a.seccion, '\"') as descripcionAula, "
+                   + "an.anio as nombreAnio "
+                   + "FROM matricula m "
+                   + "INNER JOIN alumno al ON m.codAlumno = al.codAlumno "
+                   + "INNER JOIN aula a ON m.codAula = a.codAula "
+                   + "INNER JOIN nivel n ON a.codNivel = n.codNivel "
+                   + "INNER JOIN grado g ON a.codGrado = g.codGrado "
+                   + "INNER JOIN anioAcademico an ON m.codAnioAcademico = an.codAnioAcademico "
+                   + "WHERE m.codAlumno = ? AND m.codAnioAcademico = ? AND m.estado = 1";
+        
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, codAlumno);
+            ps.setInt(2, codAnioAcademico);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Matricula m = new Matricula();
+                    m.setCodMatricula(rs.getInt("codMatricula"));
+                    m.setCodAlumno(rs.getInt("codAlumno"));
+                    m.setCodAula(rs.getInt("codAula"));
+                    m.setCodAnioAcademico(rs.getInt("codAnioAcademico"));
+                    m.setFechaMatricula(rs.getTimestamp("fechaMatricula"));
+                    m.setVersion(rs.getInt("version"));
+                    m.setEstado(rs.getBoolean("estado"));
+                    m.setNombreAlumno(rs.getString("nombreAlumno"));
+                    m.setDescripcionAula(rs.getString("descripcionAula"));
+                    m.setNombreAnio(rs.getString("nombreAnio"));
+                    return m;
+                }
+            }
+        }
+        return null;
+    }
+}
