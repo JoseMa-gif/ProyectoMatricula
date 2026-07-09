@@ -99,7 +99,7 @@ public class MatriculaDAO {
     }
 
     public int obtenerCapacidadMaximaAula(int codAula) throws SQLException {
-        // La rúbrica indica: máximo configurable mediante tabla Parámetro
+         
         String sql = "SELECT valor FROM parametro WHERE nombre = 'CAPACIDAD_MAXIMA_DEFECTO'";
         try (Connection con = ConexionBD.getConexion();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -107,7 +107,7 @@ public class MatriculaDAO {
                 if (rs.next()) return Integer.parseInt(rs.getString("valor"));
             }
         }
-        return 35; // Valor de fallback
+        return 35; 
     }
 
     public boolean tieneDeudasAnteriores(int codAlumno) throws SQLException {
@@ -135,9 +135,9 @@ public class MatriculaDAO {
 
         try {
             con = ConexionBD.getConexion();
-            con.setAutoCommit(false); // Iniciar Transacción
+            con.setAutoCommit(false);  
 
-            // 1. Insertar Matrícula
+             
             psMatricula = con.prepareStatement(sqlMatricula, Statement.RETURN_GENERATED_KEYS);
             psMatricula.setInt(1, m.getCodAlumno());
             psMatricula.setInt(2, m.getCodAula());
@@ -146,7 +146,7 @@ public class MatriculaDAO {
             psMatricula.setInt(5, m.getUsuarioRegistro());
             psMatricula.executeUpdate();
 
-            // 2. Obtener el ID generado de la Matrícula
+             
             rsKeys = psMatricula.getGeneratedKeys();
             int codMatriculaGenerado = 0;
             if (rsKeys.next()) {
@@ -155,7 +155,7 @@ public class MatriculaDAO {
                 throw new SQLException("No se pudo obtener el ID de la matrícula generada.");
             }
 
-            // 3. Generar las Cuotas
+             
             if (conceptosDelAnio != null && !conceptosDelAnio.isEmpty()) {
                 psCuota = con.prepareStatement(sqlCuota);
                 for (Concepto c : conceptosDelAnio) {
@@ -170,7 +170,7 @@ public class MatriculaDAO {
                 psCuota.executeBatch();
             }
 
-            // 4. Auditoría
+             
             m.setCodMatricula(codMatriculaGenerado);
             AuditoriaUtil.registrar(con, "Matriculas", "matricula", "MATRÍCULA", codMatriculaGenerado, null, m);
 
@@ -199,8 +199,8 @@ public class MatriculaDAO {
     }
     
     public void anularMatricula(int codMatricula) throws SQLException {
-        // Al anular una matrícula lógicamente, las cuotas pendientes podrían bloquearse o dejarse igual,
-        // pero la regla de negocio simple es anular la matrícula.
+         
+         
         String sql = "UPDATE matricula SET estado = 0 WHERE codMatricula = ?";
         try (Connection con = ConexionBD.getConexion()) {
             Matricula anterior = buscarPorIdSimple(con, codMatricula);
@@ -213,3 +213,36 @@ public class MatriculaDAO {
         }
     }
     
+    public void restaurarMatricula(int codMatricula) throws SQLException {
+        String sql = "UPDATE matricula SET estado = 1 WHERE codMatricula = ?";
+        try (Connection con = ConexionBD.getConexion()) {
+            Matricula anterior = buscarPorIdSimple(con, codMatricula);
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, codMatricula);
+                ps.executeUpdate();
+            }
+            Matricula nuevo = buscarPorIdSimple(con, codMatricula);
+            AuditoriaUtil.registrar(con, "Matriculas", "matricula", "RESTAURAR", codMatricula, anterior, nuevo);
+        }
+    }
+    
+    private Matricula buscarPorIdSimple(Connection con, int codMatricula) throws SQLException {
+        String sql = "SELECT codMatricula, codAlumno, codAula, codAnioAcademico, version, estado FROM matricula WHERE codMatricula = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, codMatricula);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Matricula m = new Matricula();
+                    m.setCodMatricula(rs.getInt("codMatricula"));
+                    m.setCodAlumno(rs.getInt("codAlumno"));
+                    m.setCodAula(rs.getInt("codAula"));
+                    m.setCodAnioAcademico(rs.getInt("codAnioAcademico"));
+                    m.setVersion(rs.getInt("version"));
+                    m.setEstado(rs.getBoolean("estado"));
+                    return m;
+                }
+            }
+        }
+        return null;
+    }
+
