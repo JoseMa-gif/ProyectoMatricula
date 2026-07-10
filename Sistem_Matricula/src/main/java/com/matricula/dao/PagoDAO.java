@@ -27,13 +27,13 @@ public class PagoDAO {
 
         try {
             con = ConexionBD.getConexion();
-            con.setAutoCommit(false); // Iniciar Transacción
+            con.setAutoCommit(false);  
 
-      
+             
             psUpdateParam = con.prepareStatement(sqlUpdateParam);
             psUpdateParam.executeUpdate();
 
-       
+             
             psSelectParam = con.prepareStatement(sqlSelectParam);
             rsParam = psSelectParam.executeQuery();
             int numCorrelativo = 0;
@@ -44,7 +44,7 @@ public class PagoDAO {
             }
             correlativoGenerado = String.format("BOL-%06d", numCorrelativo);
 
-        
+             
             psInsertRecibo = con.prepareStatement(sqlInsertRecibo);
             psInsertRecibo.setString(1, correlativoGenerado);
             psInsertRecibo.setInt(2, codCuota);
@@ -52,19 +52,19 @@ public class PagoDAO {
             psInsertRecibo.setInt(4, idUsuarioLogueado);
             psInsertRecibo.executeUpdate();
 
-         
+            // 4. Actualizar estado de Cuota
             psUpdateCuota = con.prepareStatement(sqlUpdateCuota);
             psUpdateCuota.setInt(1, codCuota);
             psUpdateCuota.executeUpdate();
 
-          
+             
             AuditoriaUtil.registrar(con, "Caja", "cuota", "PAGO", codCuota, null, "{\"recibo\":\"" + correlativoGenerado + "\"}");
 
-            con.commit(); 
+            con.commit(); // Confirmar Transacción
         } catch (SQLException e) {
             if (con != null) {
                 try {
-                    con.rollback();  
+                    con.rollback(); // Deshacer en caso de error
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
@@ -86,4 +86,32 @@ public class PagoDAO {
         
         return correlativoGenerado;
     }
-    
+
+    public com.matricula.model.ReciboDTO obtenerDetalleRecibo(int codCuota) throws SQLException {
+        String sql = "SELECT r.correlativo, r.monto, c.nombreConcepto, r.fechaEmision, "
+                   + "CONCAT(al.apellidoPaterno, ' ', al.apellidoMaterno, ', ', al.nombres) as nombreAlumno "
+                   + "FROM recibo r "
+                   + "INNER JOIN cuota cu ON r.codCuota = cu.codCuota "
+                   + "INNER JOIN concepto c ON cu.codConcepto = c.codConcepto "
+                   + "INNER JOIN matricula m ON cu.codMatricula = m.codMatricula "
+                   + "INNER JOIN alumno al ON m.codAlumno = al.codAlumno "
+                   + "WHERE r.codCuota = ?";
+                   
+        try (Connection con = ConexionBD.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, codCuota);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    com.matricula.model.ReciboDTO dto = new com.matricula.model.ReciboDTO();
+                    dto.setCorrelativo(rs.getString("correlativo"));
+                    dto.setMonto(rs.getBigDecimal("monto"));
+                    dto.setConcepto(rs.getString("nombreConcepto"));
+                    dto.setFecha(rs.getTimestamp("fechaEmision"));
+                    dto.setAlumno(rs.getString("nombreAlumno"));
+                    return dto;
+                }
+            }
+        }
+        return null;
+    }
+}
