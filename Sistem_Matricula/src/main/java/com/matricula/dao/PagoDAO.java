@@ -60,11 +60,11 @@ public class PagoDAO {
              
             AuditoriaUtil.registrar(con, "Caja", "cuota", "PAGO", codCuota, null, "{\"recibo\":\"" + correlativoGenerado + "\"}");
 
-            con.commit(); // Confirmar Transacción
+            con.commit();  
         } catch (SQLException e) {
             if (con != null) {
                 try {
-                    con.rollback(); // Deshacer en caso de error
+                    con.rollback();  
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }

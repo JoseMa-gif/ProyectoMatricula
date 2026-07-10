@@ -174,18 +174,18 @@ public class MatriculaDAO {
             m.setCodMatricula(codMatriculaGenerado);
             AuditoriaUtil.registrar(con, "Matriculas", "matricula", "MATRÍCULA", codMatriculaGenerado, null, m);
 
-            con.commit(); // Confirmar Transacción
+            con.commit(); 
         } catch (SQLException e) {
             if (con != null) {
                 try {
-                    con.rollback(); // Deshacer en caso de error
+                    con.rollback();  
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
             }
             throw e;
         } finally {
-            // Cerrar recursos
+             
             if (rsKeys != null) try { rsKeys.close(); } catch (SQLException e) {}
             if (psMatricula != null) try { psMatricula.close(); } catch (SQLException e) {}
             if (psCuota != null) try { psCuota.close(); } catch (SQLException e) {}

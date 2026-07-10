@@ -107,7 +107,7 @@ public class MatriculaServlet extends HttpServlet {
                 m.setEstado(true); 
                 m.setUsuarioRegistro(u.getIdUsuario());
                 
-                // Llamada Transaccional
+ 
                 dao.registrarMatriculaTransaccional(m, conceptos);
                 
                 request.getSession().setAttribute("mensajeExito", "Matrícula registrada correctamente tras validación 2FA. Se generaron las cuotas.");
