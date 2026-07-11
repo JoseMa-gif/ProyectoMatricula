@@ -15,7 +15,7 @@ import java.sql.SQLException;
  *
  * @author JOSE
  */
-public class UsuarioDao {
+public class UsuarioDAO {
     
      public Usuario buscarPorUsuario(String usuario) throws SQLException {
         String sql = "SELECT u.idUsuario, u.usuario, u.password, u.secret2FA, u.idRol, "
