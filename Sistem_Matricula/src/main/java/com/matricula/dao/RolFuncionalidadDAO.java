@@ -75,7 +75,22 @@ public class RolFuncionalidadDAO {
         return null;
     }
 
-    
+    public void actualizarPermisos(Connection con, int idRolFuncionalidad, boolean ver, boolean crear, boolean editar, boolean eliminar) throws SQLException {
+        RolFuncionalidad anterior = buscarPorId(con, idRolFuncionalidad);
+        
+        String sql = "UPDATE rol_funcionalidad SET ver = ?, crear = ?, editar = ?, eliminar = ? WHERE idRolFuncionalidad = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setBoolean(1, ver);
+            ps.setBoolean(2, crear);
+            ps.setBoolean(3, editar);
+            ps.setBoolean(4, eliminar);
+            ps.setInt(5, idRolFuncionalidad);
+            ps.executeUpdate();
+        }
+        
+        RolFuncionalidad nuevo = buscarPorId(con, idRolFuncionalidad);
+        AuditoriaUtil.registrar(con, "Seguridad", "rol_funcionalidad", "UPDATE_PERMISOS", idRolFuncionalidad, anterior, nuevo);
+    }
     
   
 }
