@@ -47,4 +47,5 @@ public class Alumno {
 
     public String getNombreTipoDocumento() { return nombreTipoDocumento; }
     public void setNombreTipoDocumento(String nombreTipoDocumento) { this.nombreTipoDocumento = nombreTipoDocumento; }
+//Campos
 }
