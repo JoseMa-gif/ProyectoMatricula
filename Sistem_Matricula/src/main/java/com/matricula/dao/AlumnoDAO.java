@@ -75,7 +75,7 @@ public class AlumnoDAO {
             try (PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, a.getCodTipoDocumento());
                 
-                // Encriptar datos sensibles
+                
                 ps.setString(2, CifradoAESUtil.cifrar(a.getNumeroDocumento()));
                 ps.setString(3, a.getNombres());
                 ps.setString(4, a.getApellidoPaterno());
