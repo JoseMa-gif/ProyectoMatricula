@@ -66,6 +66,33 @@ public class UsuarioDAO {
         return lista;
     }
       
+      private Usuario buscarPorId(Connection con, int idUsuario) throws SQLException {
+        String sql = "SELECT idUsuario, usuario, password, secret2FA, idRol, estado FROM usuario WHERE idUsuario = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idUsuario);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Usuario u = new Usuario();
+                    u.setIdUsuario(rs.getInt("idUsuario"));
+                    u.setUsuario(rs.getString("usuario"));
+                    u.setPassword(rs.getString("password"));
+                    u.setSecret2FA(rs.getString("secret2FA"));
+                    u.setIdRol(rs.getInt("idRol"));
+                    u.setEstado(rs.getBoolean("estado"));
+                    return u;
+                }
+            }
+        }
+        return null;
+    }
+
+    /** Versión pública: abre su propia conexión. Útil desde servlets. */
+    public Usuario buscarPorId(int idUsuario) throws SQLException {
+        try (Connection con = ConexionBD.getConexion()) {
+            return buscarPorId(con, idUsuario);
+        }
+    }
+      
        public void actualizarSecret2FA(int idUsuario, String secret) throws Exception {
         String sql = "UPDATE usuario SET secret2FA = ? WHERE idUsuario = ?";
         try (Connection con = ConexionBD.getConexion()) {
