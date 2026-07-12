@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author JOSE
  */
-public class RolDao {
+public class RolDAO {
     
     public List<Rol> listarTodos() throws SQLException {
         List<Rol> lista = new ArrayList<>();

@@ -86,7 +86,7 @@ public class UsuarioDAO {
         return null;
     }
 
-    /** Versión pública: abre su propia conexión. Útil desde servlets. */
+    
     public Usuario buscarPorId(int idUsuario) throws SQLException {
         try (Connection con = ConexionBD.getConexion()) {
             return buscarPorId(con, idUsuario);
