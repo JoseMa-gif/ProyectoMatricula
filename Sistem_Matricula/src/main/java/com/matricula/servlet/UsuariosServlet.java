@@ -4,6 +4,7 @@
  */
 package com.matricula.servlet;
 
+import com.matricula.dao.RolDAO;
 import com.matricula.dao.UsuarioDAO;
 import com.matricula.model.Rol;
 import com.matricula.model.Usuario;
@@ -33,7 +34,7 @@ public class UsuariosServlet extends HttpServlet {
             List<Usuario> lista = dao.listarTodos();
             request.setAttribute("usuarios", lista);
             
-            // Pasamos los roles para el formulario de creación
+            
             RolDAO rolDao = new RolDAO();
             List<Rol> roles = rolDao.listarTodos();
             request.setAttribute("roles", roles);
