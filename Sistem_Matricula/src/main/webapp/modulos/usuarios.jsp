@@ -234,5 +234,185 @@
             </form>
         </div>
     </div>
+                 <script>
+        
+        function abrirModalReset(idUsuario, nombreUsuario) {
+            document.getElementById('reset-idUsuario').value = idUsuario;
+            document.getElementById('reset-nombre-usuario').textContent = nombreUsuario;
+            document.getElementById('reset-nueva-pw').value = '';
+            document.getElementById('reset-confirmar-pw').value = '';
+            /* limpiar errores */
+            ['err-reset-pw','err-reset-confirmar'].forEach(function(id) {
+                document.getElementById(id).style.display = 'none';
+            });
+            ['reset-nueva-pw','reset-confirmar-pw'].forEach(function(fId) {
+                document.getElementById(fId).classList.remove('input-error');
+            });
+            document.getElementById('modalReset').classList.add('active');
+        }
+        function cerrarModalReset() {
+            document.getElementById('modalReset').classList.remove('active');
+        }
+       
+        document.getElementById('modalReset').addEventListener('click', function(e) {
+            if (e.target === this) cerrarModalReset();
+        });
+
+        function validarResetPw() {
+            var pw  = document.getElementById('reset-nueva-pw');
+            var err = document.getElementById('err-reset-pw');
+            if (pw.value.length > 0 && pw.value.length < 6) {
+                pw.classList.add('input-error'); err.style.display = 'block';
+            } else {
+                pw.classList.remove('input-error'); err.style.display = 'none';
+            }
+        }
+        function validarResetConfirmar() {
+            var pw1 = document.getElementById('reset-nueva-pw').value;
+            var pw2 = document.getElementById('reset-confirmar-pw');
+            var err = document.getElementById('err-reset-confirmar');
+            if (pw2.value.length > 0 && pw1 !== pw2.value) {
+                pw2.classList.add('input-error'); err.style.display = 'block';
+            } else {
+                pw2.classList.remove('input-error'); err.style.display = 'none';
+            }
+        }
+
+        document.getElementById('formReset').addEventListener('submit', function(e) {
+            var ok = true;
+            var pw1 = document.getElementById('reset-nueva-pw');
+            var pw2 = document.getElementById('reset-confirmar-pw');
+
+            if (pw1.value.length < 6) {
+                pw1.classList.add('input-error');
+                document.getElementById('err-reset-pw').style.display = 'block';
+                ok = false;
+            }
+            if (pw1.value !== pw2.value) {
+                pw2.classList.add('input-error');
+                document.getElementById('err-reset-confirmar').style.display = 'block';
+                ok = false;
+            }
+            if (!ok) e.preventDefault();
+        });
+
+        function filtrarUsuario(input) {
+            input.value = input.value.replace(/[^A-Za-z0-9@._\-]/g, '');
+        }
+
+        function validarUsuario(input) {
+            var val = input.value.trim();
+            var err = document.getElementById('err-usuario');
+            /* Solo letras, números, @, puntos, guiones bajos y guiones */
+            var regex = /^[A-Za-z0-9@._\-]+$/;
+            if (val.length > 0 && !regex.test(val)) {
+                input.classList.add('input-error');
+                err.textContent = 'Solo se permiten letras, números, @, punto, guión bajo y guión.';
+                err.style.display = 'block';
+            } else if (val.length > 0 && val.indexOf('@') === -1) {
+                input.classList.add('input-error');
+                err.textContent = 'El usuario debe contener @ (formato de correo).';
+                err.style.display = 'block';
+            } else {
+                input.classList.remove('input-error');
+                err.style.display = 'none';
+            }
+        }
+
+      
+        function validarPwUsuario(input) {
+            var err = document.getElementById('err-password');
+            if (input.style.display !== 'none' && input.value.length > 0 && input.value.length < 6) {
+                input.classList.add('input-error');
+                err.style.display = 'block';
+            } else {
+                input.classList.remove('input-error');
+                err.style.display = 'none';
+            }
+        }
+
+        
+        var _formUsuario = document.getElementById('formUsuario');
+        if (_formUsuario) _formUsuario.addEventListener('submit', function(e) {
+            var ok = true;
+
+            var usuarioEl = document.getElementById('usuario');
+            var pwEl = document.getElementById('password');
+
+           
+            [usuarioEl, pwEl].forEach(function(f) { f.classList.remove('input-error'); });
+            ['err-usuario','err-password'].forEach(function(id) {
+                document.getElementById(id).style.display = 'none';
+            });
+
+     
+            if (!usuarioEl.value.trim()) {
+                usuarioEl.classList.add('input-error');
+                ok = false;
+            } else {
+                validarUsuario(usuarioEl);
+                if (usuarioEl.classList.contains('input-error')) ok = false;
+            }
+
+            var accion = document.getElementById('accion').value;
+            var pwVisible = (pwEl.style.display !== 'none');
+            if (accion === 'crear' && pwVisible && pwEl.value.length < 6) {
+                pwEl.classList.add('input-error');
+                document.getElementById('err-password').textContent = 'La contraseña debe tener al menos 6 caracteres.';
+                document.getElementById('err-password').style.display = 'block';
+                ok = false;
+            }
+
+            if (!ok) e.preventDefault();
+        });
+
+        function editarUsuario(id, usuario, idRol, estado) {
+            document.getElementById('form-titulo').innerText = 'Editar Usuario';
+            document.getElementById('accion').value = 'editar';
+            document.getElementById('form-idUsuario').value = id;
+            document.getElementById('usuario').value = usuario;
+            
+            var passField = document.getElementById('password');
+            passField.required = false;
+            passField.value = '';
+            
+            document.getElementById('lbl-password').style.display = 'none';
+            passField.style.display = 'none';
+            
+            document.getElementById('idRol').value = idRol;
+            document.getElementById('estado').value = estado;
+            
+            document.getElementById('btn-guardar').innerText = 'Actualizar Usuario';
+            document.getElementById('btn-cancelar').style.display = 'inline-block';
+            window.scrollTo(0, 0);
+        }
+
+        function cancelarEdicion() {
+            document.getElementById('form-titulo').innerText = 'Crear Nuevo Usuario';
+            document.getElementById('accion').value = 'crear';
+            document.getElementById('form-idUsuario').value = '';
+            document.getElementById('usuario').value = '';
+            
+            var passField = document.getElementById('password');
+            passField.required = true;
+            passField.value = '';
+            
+            document.getElementById('lbl-password').style.display = 'inline-block';
+            passField.style.display = 'inline-block';
+            
+            document.getElementById('idRol').value = '1';
+            document.getElementById('estado').value = '1';
+            
+         
+            ['err-usuario','err-password'].forEach(function(id) {
+                document.getElementById(id).style.display = 'none';
+            });
+            document.getElementById('usuario').classList.remove('input-error');
+            passField.classList.remove('input-error');
+
+            document.getElementById('btn-guardar').innerText = 'Guardar Usuario';
+            document.getElementById('btn-cancelar').style.display = 'none';
+        }
+    </script>
     </body>
 </html>
