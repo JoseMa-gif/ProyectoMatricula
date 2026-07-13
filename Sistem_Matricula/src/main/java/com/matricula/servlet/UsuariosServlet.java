@@ -8,6 +8,7 @@ import com.matricula.dao.RolDAO;
 import com.matricula.dao.UsuarioDAO;
 import com.matricula.model.Rol;
 import com.matricula.model.Usuario;
+import com.matricula.util.SeguridadUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -16,11 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-
-/**
- *
- * @author JOSE
- */
 
 @WebServlet("/usuarios")
 public class UsuariosServlet extends HttpServlet {
