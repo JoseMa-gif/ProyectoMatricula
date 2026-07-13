@@ -5,6 +5,7 @@
 package com.matricula.dao;
 
 import com.matricula.model.RolFuncionalidad;
+import com.matricula.util.AuditoriaUtil;
 import com.matricula.util.ConexionBD;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
