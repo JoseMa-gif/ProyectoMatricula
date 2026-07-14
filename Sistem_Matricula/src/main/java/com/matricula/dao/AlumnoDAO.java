@@ -28,7 +28,6 @@ public class AlumnoDAO {
                 a.setCodTipoDocumento(rs.getInt("codTipoDocumento"));
                 a.setNombreTipoDocumento(rs.getString("nombreTipoDocumento"));
                 
-                // Desencriptar datos sensibles
                 a.setNumeroDocumento(CifradoAESUtil.descifrar(rs.getString("numeroDocumento")));
                 a.setFechaNacimiento(CifradoAESUtil.descifrar(rs.getString("fechaNacimiento")));
                 
@@ -74,8 +73,7 @@ public class AlumnoDAO {
         try (Connection con = ConexionBD.getConexion()) {
             try (PreparedStatement ps = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, a.getCodTipoDocumento());
-                
-                
+                               
                 ps.setString(2, CifradoAESUtil.cifrar(a.getNumeroDocumento()));
                 ps.setString(3, a.getNombres());
                 ps.setString(4, a.getApellidoPaterno());
