@@ -13,7 +13,7 @@ import com.matricula.util.AuditoriaUtil;
 
 public class UsuarioDAO {
 
-    /** Busca un usuario activo por su nombre de usuario, junto con el nombre de su rol. */
+    
     public Usuario buscarPorUsuario(String usuario) throws SQLException {
         String sql = "SELECT u.idUsuario, u.usuario, u.password, u.secret2FA, u.idRol, "
                 + "u.estado, r.nombreRol "
@@ -95,7 +95,7 @@ public class UsuarioDAO {
         return null;
     }
 
-    /** Versión pública: abre su propia conexión. Útil desde servlets. */
+  
     public Usuario buscarPorId(int idUsuario) throws SQLException {
         try (Connection con = ConexionBD.getConexion()) {
             return buscarPorId(con, idUsuario);
@@ -154,10 +154,7 @@ public class UsuarioDAO {
         }
     }
 
-    /**
-     * Cambia ÚNICAMENTE la contraseña de un usuario.
-     * Método directo y seguro: solo toca la columna password.
-     */
+     
     public void cambiarSoloPassword(int idUsuario, String nuevoHash) throws SQLException {
         String sql = "UPDATE usuario SET password = ? WHERE idUsuario = ?";
         try (Connection con = ConexionBD.getConexion()) {

@@ -52,7 +52,7 @@ public class PagoDAO {
             psInsertRecibo.setInt(4, idUsuarioLogueado);
             psInsertRecibo.executeUpdate();
 
-            // 4. Actualizar estado de Cuota
+ 
             psUpdateCuota = con.prepareStatement(sqlUpdateCuota);
             psUpdateCuota.setInt(1, codCuota);
             psUpdateCuota.executeUpdate();

@@ -83,7 +83,7 @@
             line-height: 1.4;
         }
 
-        /* Botón cerrar */
+ 
         .toast-close {
             background: none;
             border: none;

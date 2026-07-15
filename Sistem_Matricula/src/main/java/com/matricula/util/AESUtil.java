@@ -6,17 +6,10 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- * Cifra y descifra información crítica (fecha de nacimiento, número de
- * documento) usando AES-256 en modo GCM.
- *
- * IMPORTANTE: la LLAVE debe guardarse fuera del código fuente
- * (variable de entorno / gestor de secretos), aquí se deja como
- * constante solo con fines de ejemplo académico.
- */
+ 
 public class AESUtil {
 
-    // Debe tener 32 caracteres (256 bits) para AES-256. Reemplazar en producción.
+     
     private static final String LLAVE = "CambiarEstaLlaveDe32CaracteresYA";
     private static final int TAG_LENGTH_BIT = 128;
     private static final int IV_LENGTH_BYTE = 12;

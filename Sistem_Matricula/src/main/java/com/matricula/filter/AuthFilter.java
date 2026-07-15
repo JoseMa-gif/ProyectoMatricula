@@ -9,11 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
-/**
- * Verifica que exista una sesión activa antes de permitir el acceso a
- * cualquier página protegida. Las páginas de login y los recursos
- * estáticos quedan excluidos mediante el urlPatterns.
- */
+ 
 @WebFilter(urlPatterns = {"/dashboard.jsp", "/modulos/*", "/cambiar_password"})
 public class AuthFilter extends HttpFilter {
 

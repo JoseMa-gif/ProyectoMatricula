@@ -40,9 +40,7 @@ public class LoginServlet extends HttpServlet {
 
             try (Connection con = ConexionBD.getConexion()) {
                 if (loginValido) {
-                    // TODO: si usuario.getSecret2FA() != null, redirigir a pantalla de
-                    // verificación TOTP (Google Authenticator) antes de abrir sesión completa.
-
+ 
                     HttpSession session = request.getSession(true);
                     session.setAttribute("usuario", usuario);
 
@@ -50,9 +48,9 @@ public class LoginServlet extends HttpServlet {
                     List<RolFuncionalidad> permisos = rfDao.listarPorRol(usuario.getIdRol());
                     session.setAttribute("permisos", permisos);
 
-                    session.setMaxInactiveInterval(30 * 60); // 30 minutos
+                    session.setMaxInactiveInterval(30 * 60); 
                     
-                    // Actualizamos el contexto para que auditoria sepa quién acaba de loguearse
+                     
                     Auditoria ctx = AuditoriaContext.getAuditoria();
                     if (ctx != null) {
                         ctx.setCodUsuario(usuario.getIdUsuario());

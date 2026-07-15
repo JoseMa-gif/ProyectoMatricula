@@ -7,7 +7,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class CifradoAESUtil {
 
     private static final String ALGORITHM = "AES";
-    // Clave de 16 caracteres (128 bits) para AES
+     
     private static final String KEY = "MatriculaSecureK"; 
 
     public static String cifrar(String valorPlano) throws Exception {

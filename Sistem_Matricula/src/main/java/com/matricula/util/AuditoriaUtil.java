@@ -5,13 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import com.matricula.model.Auditoria;
-
-/**
- * Registra en la tabla auditoria cada operación relevante del sistema.
- * Debe invocarse dentro de la MISMA transacción que la operación auditada,
- * usando la misma Connection, para que el rollback también revierta el
- * registro de auditoría si algo falla.
- */
+ 
 public class AuditoriaUtil {
 
     private static final Gson gson = new Gson();

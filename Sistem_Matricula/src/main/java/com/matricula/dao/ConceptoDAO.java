@@ -96,7 +96,7 @@ public class ConceptoDAO {
     }
 
     public void actualizar(Concepto c, int idUsuario, String ip) throws SQLException {
-        // Se envía la versión actual (NEW.version). El trigger comprobará si coincide con la base de datos (OLD.version)
+ 
         String sql = "UPDATE concepto SET codAnioAcademico = ?, codTipoConcepto = ?, nombreConcepto = ?, monto = ?, ordenPago = ?, obligatorio = ?, estado = ?, version = ? WHERE codConcepto = ?";
         try (Connection con = ConexionBD.getConexion()) {
             Concepto anterior = buscarPorId(con, c.getCodConcepto());
@@ -153,11 +153,7 @@ public class ConceptoDAO {
         return null;
     }
 
-    /**
-     * Clona todos los conceptos activos de un año origen a un año destino.
-     * Omite conceptos que ya existan en el año destino (mismo nombre y tipo).
-     * @return cantidad de conceptos clonados
-     */
+     
     public int clonarConceptos(int codAnioOrigen, int codAnioDestino) throws SQLException {
         String sql = "INSERT INTO concepto (codAnioAcademico, codTipoConcepto, nombreConcepto, monto, ordenPago, obligatorio, estado, version) "
                    + "SELECT ?, codTipoConcepto, nombreConcepto, monto, ordenPago, obligatorio, 1, 1 "

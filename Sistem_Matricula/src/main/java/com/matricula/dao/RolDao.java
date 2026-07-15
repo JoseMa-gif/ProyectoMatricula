@@ -13,10 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author JOSE
- */
+
 public class RolDAO {
     
     public List<Rol> listarTodos() throws SQLException {

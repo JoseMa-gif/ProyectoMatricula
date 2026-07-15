@@ -14,10 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author JOSE
- */
+ 
 public class RolFuncionalidadDAO {
     
       public List<RolFuncionalidad> listarPorRol(int idRol) throws SQLException {

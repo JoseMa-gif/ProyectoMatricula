@@ -9,7 +9,7 @@ public class ConexionBD {
 
     private static HikariDataSource dataSource;
 
-    // TODO: mover estos valores a un archivo de configuración externo (no subir credenciales al repositorio)
+     
     private static final String HOST = System.getenv("DB_HOST") != null ? System.getenv("DB_HOST") : "localhost";
     private static final String URL = "jdbc:mysql://" + HOST + ":3306/bd_matricula?useSSL=false&serverTimezone=America/Lima";
     private static final String USUARIO = System.getenv("DB_USER") != null ? System.getenv("DB_USER") : "root";

@@ -27,7 +27,7 @@ public class LogoutServlet extends HttpServlet {
                     AuditoriaUtil.registrar(con, "Seguridad",
                             "usuario", "LOGOUT", usuario.getIdUsuario(), null, null);
                 } catch (Exception e) {
-                    // no debe impedir el cierre de sesión
+ 
                 }
             }
             session.invalidate();

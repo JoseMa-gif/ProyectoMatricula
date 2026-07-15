@@ -22,7 +22,7 @@ public class TOTPUtil {
                     + "?secret=" + secret
                     + "&issuer=" + URLEncoder.encode(ISSUER, StandardCharsets.UTF_8.toString());
             
-            // Usamos api.qrserver.com para generar la imagen del QR ya que Google Charts cerró su API
+             
             return "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
         } catch (Exception e) {
             e.printStackTrace();

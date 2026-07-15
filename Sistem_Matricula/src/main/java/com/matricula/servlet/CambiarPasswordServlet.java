@@ -19,7 +19,7 @@ public class CambiarPasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Simplemente muestra el formulario
+ 
         request.getRequestDispatcher("/modulos/cambiar_password.jsp").forward(request, response);
     }
 
@@ -37,7 +37,7 @@ public class CambiarPasswordServlet extends HttpServlet {
         String passwordNueva     = request.getParameter("passwordNueva");
         String passwordConfirmar = request.getParameter("passwordConfirmar");
 
-        // --- Validaciones servidor ---
+  
         if (passwordActual == null || passwordActual.trim().isEmpty()
                 || passwordNueva == null || passwordNueva.trim().isEmpty()
                 || passwordConfirmar == null || passwordConfirmar.trim().isEmpty()) {
@@ -61,7 +61,7 @@ public class CambiarPasswordServlet extends HttpServlet {
         try {
             UsuarioDAO dao = new UsuarioDAO();
 
-            // Buscar usuario completo (con el hash actual) desde la BD
+   
             Usuario usuarioBD = dao.buscarPorUsuario(usuarioSesion.getUsuario());
             if (usuarioBD == null) {
                 request.getSession().setAttribute("mensajeError", "No se encontró el usuario en el sistema.");
@@ -69,14 +69,14 @@ public class CambiarPasswordServlet extends HttpServlet {
                 return;
             }
 
-            // Verificar contraseña actual con BCrypt
+    
             if (!SeguridadUtil.verificarPassword(passwordActual, usuarioBD.getPassword())) {
                 request.getSession().setAttribute("mensajeError", "La contraseña actual ingresada es incorrecta.");
                 response.sendRedirect(request.getContextPath() + "/cambiar_password");
                 return;
             }
 
-            // Cambiar SOLO la contraseña (método directo, no toca otros campos)
+     
             String nuevoHash = SeguridadUtil.hashPassword(passwordNueva);
             dao.cambiarSoloPassword(usuarioBD.getIdUsuario(), nuevoHash);
 
